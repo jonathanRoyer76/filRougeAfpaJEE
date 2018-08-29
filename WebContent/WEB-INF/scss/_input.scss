@@ -1,0 +1,31 @@
+@import '_variables.scss';
+
+@mixin input_text{
+    input[type=text]{
+        border: solid;
+        border-color: map-get($mapCouleurPrincipale, base);
+        border-width: 1px;
+        border-radius: 8px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        &::placeholder{
+            opacity:0.5;
+            color:map-get($mapCouleurPrincipale, dark);
+        }
+    }
+}
+
+@mixin input_password{
+    input[type=password]{
+        border: solid;
+        border-color: map-get($mapCouleurPrincipale, base);
+        border-width: 1px;
+        border-radius: 8px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        &::placeholder{
+            opacity:0.5;
+            color:map-get($mapCouleurPrincipale, dark);
+        }
+    }
+}

@@ -1,0 +1,9 @@
+@import '_input.scss';
+@import 'variables.scss';
+
+@include input_text;
+@include input_password;
+
+.test{
+    color: map-get($mapCouleurPrincipale, base );
+}

@@ -1,0 +1,8 @@
+// $couleurPrincipale : #00a8e2;
+$couleurPrincipale : #009bae;
+$mapCouleurPrincipale:(
+    base: $couleurPrincipale,
+    base-hover: lighten($couleurPrincipale, 10%),
+    dark: darken($couleurPrincipale, 20%),
+    light: lighten($couleurPrincipale, 30%)
+)
