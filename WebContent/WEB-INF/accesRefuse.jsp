@@ -7,6 +7,6 @@
         <link rel=stylesheet href="<c:url value="/inc/bootstrap/css/bootstrap.css"/>"/>
     </head>
     <body>
-        L'accès à cette page vous a été refusé.
+        <h1>L'accès à cette page vous a été refusé.</h1>
     </body> 
 </html> 

@@ -5,29 +5,41 @@
     </head>
     <body>
     	<%@ include file="/WEB-INF/menu.jsp" %>
-        <div class="table-responsive">
-        	<table class="table table-striped">
-	            <caption>Liste des clients produits</caption>
-	            <thead>
-	                <tr>
-	                    <th>Référence</th>
-	                    <th>Nom</th>
-	                    <th>Prénom</th>
-	                    <th>E-mail</th>
-	                </tr>
-	            </thead>
-	            <tbody>
-					<c:forEach items="${ listeClients }" var="client">
-						<tr>
-							<td>${ client.id }</td>
-							<td>${ client.nom }</td>
-							<td>${ client.prenom }</td>
-							<td>${ client.mail }</td>
-						</tr>
-					</c:forEach>
-	            </tbody>
-	        </table>
+        <div class="card-columns">
+			<c:forEach items="${ listeProduits }" var="produit">
+				<div class="container">
+					  <div class="card">
+					    <div class="card-body">
+					    <div class="card-text"><small class="text-muted">Référence : ${ produit.idProduit }</small></div>
+					      <h5 class="card-title">${ produit.nomProduit }</h5>
+					      <p class="card-text">${ produit.prixVenteTTC } euros</p>
+					      <p class="card-text">
+					      	<c:if test="${ produit.libelleStatutProduit=='rupture' }">
+					      		<span class="text-danger">Rupture momentanée</span>
+					      	</c:if>
+					      	<c:if test="${ produit.libelleStatutProduit!='rupture' }">
+					      		<span class="text-info">En stock : ${ produit.quantiteStock }</span>
+					      	</c:if>
+					      </p>
+						      <a href="" onclick="ajoutPanier(${produit.idProduit})" class="btn btn-primary">Ajouter au panier</a>				      
+					    </div>
+					  </div>
+				</div>
+			</c:forEach>
 		</div>
 		
+		<%-- <script type="text/javascript" src="<c:url value="/inc/scriptsJS/script.js"/>"></script> --%>
+		<script type="text/javascript">
+			function ajoutPanier(idProduit){
+				var xhttp = new XMLHttpRequest();
+			 	xhttp.onreadystatechange = function() {
+				    if (this.readyState == 4 && this.status == 200) {
+				     /* console.log("terminé") */
+				    }
+			  	};
+				  xhttp.open("GET", "services?role=ajoutPanier&idProduit="+idProduit, true);
+				  xhttp.send();
+		    }			
+		</script>
     </body> 
 </html> 

@@ -11,7 +11,8 @@
 				  <div class="card-body">
 				    <h5 class="card-title">${client.prenom} ${client.nom}</h5>
 				    <p class="card-text">adresse mail : ${client.mail}</p>
-				    <p class="card-text"><small class="text-muted">identifiant : ${client.prenom}</small></p>
+				    <p class="card-text">Statut : ${ client.statut }</p>
+				    <p class="card-text"><small class="text-muted">identifiant : ${client.id}</small></p>
 				  </div>
 				</div>
 			</c:forEach>

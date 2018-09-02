@@ -7,7 +7,6 @@
       <include-prelude>/WEB-INF/taglibs.jsp</include-prelude>
     </jsp-property-group>
   </jsp-config>
-  
   <filter>
     <filter-name>Set Character Encoding</filter-name>
     <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
@@ -23,12 +22,10 @@
   <filter-mapping>
     <filter-name>Set Character Encoding</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  
+  </filter-mapping>  
   <welcome-file-list>
-  	<welcome-file>connexion</welcome-file>
+    <welcome-file>listeProduits</welcome-file>
   </welcome-file-list>
-  
   <servlet>
     <servlet-name>connexion</servlet-name>
     <servlet-class>com.projet.servlets.Connexion</servlet-class>
@@ -37,7 +34,6 @@
     <servlet-name>connexion</servlet-name>
     <url-pattern>/connexion</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>listeClients</servlet-name>
     <servlet-class>com.projet.servlets.ListeClients</servlet-class>
@@ -46,7 +42,38 @@
     <servlet-name>listeClients</servlet-name>
     <url-pattern>/admin/listeClients</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>services</servlet-name>
+    <servlet-class>com.projet.servlets.Services</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>services</servlet-name>
+    <url-pattern>/services</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>listeProduits</servlet-name>
+    <servlet-class>com.projet.servlets.ListeProduits</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>listeProduits</servlet-name>
+    <url-pattern>/listeProduits</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>listeCommandesClient</servlet-name>
+    <servlet-class>com.projet.servlets.listeCommandesClient</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>listeCommandesClient</servlet-name>
+    <url-pattern>/listeCommandes</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>panier</servlet-name>
+    <servlet-class>com.projet.servlets.Panier</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>panier</servlet-name>
+    <url-pattern>/monPanier</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>accesRefuse</servlet-name>
     <servlet-class>com.projet.servlets.AccesRefuse</servlet-class>
@@ -55,6 +82,15 @@
     <servlet-name>accesRefuse</servlet-name>
     <url-pattern>/accesRefuse</url-pattern>
   </servlet-mapping>
+  
+  <filter>
+    <filter-name>filtrePanier</filter-name>
+    <filter-class>com.projet.filtres.FiltrePanier</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>filtrePanier</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
   
   <filter>
     <filter-name>filtreRestriction</filter-name>

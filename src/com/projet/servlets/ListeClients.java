@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controler.Client;
-import controler.DAO.DAOFactory;
+import modele.Client;
+import modele.DAO.DAOFactory;
 
 /**
  * Servlet implementation class ListeClients
@@ -35,7 +35,8 @@ public class ListeClients extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		ArrayList<Client> listeClients = DAOFactory.getClientDAO().getListe();
+		ArrayList<Client> listeClients = new ArrayList<Client>();
+		listeClients = DAOFactory.getClientDAO().getListe();
 
 		request.setAttribute("listeClients", listeClients);
 		this.getServletContext().getRequestDispatcher(VUE).forward(request, response);

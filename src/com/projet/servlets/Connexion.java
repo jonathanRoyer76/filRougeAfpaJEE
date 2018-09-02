@@ -7,11 +7,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 
-import controler.BDDException;
-import controler.Client;
-import controler.Services;
-import controler.DAO.DAOFactory;
+import modele.BDDException;
+import modele.Client;
+import modele.Commande;
+import modele.Services;
+import modele.DAO.DAOFactory;
 
 /**
  * Servlet implementation class Connexion
@@ -21,8 +23,7 @@ public class Connexion extends HttpServlet {
 	private static final long	serialVersionUID	= 1L;
 	private static final String	VUE					= "/WEB-INF/connexion.jsp";
 	private static final String	ACCES_REFUSE		= "/WEB-INF/accesRefuse.jsp";
-	private static final String	ACCES_LISTE_CLIENTS	= "/admin/listeClients";
-	private static final String	CLIENT_SESSION		= "client_session";
+	private static final String	ACCES_LISTE_PRODUITS	= "/";
 	private static final String	PARAM_MAIL			= "mail";
 	private static final String	PARAM_MDP			= "mdp";
 
@@ -67,9 +68,33 @@ public class Connexion extends HttpServlet {
 		if (mail != "" && mdp != "") {
 			try {
 				if (new Services().verifieID(mail, mdp)) {
+					// les infos sont vérifiées
 					Client client = DAOFactory.getClientDAO().getByMail(mail);
-					request.getSession().setAttribute(CLIENT_SESSION, client);
-					response.sendRedirect(request.getContextPath() + ACCES_LISTE_CLIENTS);
+					com.projet.servlets.Services services = new com.projet.servlets.Services();
+					services.setRequeteEnCours(request);
+					services.setReponseAttendue(response);
+					
+					// Si l'on a un panier pour un guest et si le client se connectant en a un aussi
+					Commande panierSession = Panier.getPanierSession(request);
+					boolean continuer = true;
+					if (panierSession!=null && client!=null) {
+						if (panierSession.getClient().getId()!=client.getId()) {
+							// 2 paniers différents détectés
+							int resultatSaisie = JOptionPane.showConfirmDialog (null, "Un panier est déjà en cours sur cet ordinateur. Vous connecter le supprimera, voulez-vous continer ?","Warning",JOptionPane.YES_NO_OPTION);
+							if(resultatSaisie != JOptionPane.YES_OPTION){
+								continuer=false;
+							}
+						}
+					}
+					if (continuer) {
+						if (client!=null) {
+							services.sauveClient(client);
+							Commande panier = Panier.getPanierByIdClient(client.getId());
+							if (panier!=null)Panier.sauvePanier(request, response, panier);
+							request.getSession().setAttribute(services.SESSION_IS_CLIENT_GUEST, "faux");
+						}
+					}
+					response.sendRedirect(request.getContextPath() + ACCES_LISTE_PRODUITS);
 				} else {
 					this.getServletContext().getRequestDispatcher(ACCES_REFUSE).forward(request, response);
 				}
@@ -80,5 +105,4 @@ public class Connexion extends HttpServlet {
 			this.getServletContext().getRequestDispatcher(ACCES_REFUSE).forward(request, response);
 		}
 	}
-
 }

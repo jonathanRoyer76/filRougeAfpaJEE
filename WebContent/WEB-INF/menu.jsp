@@ -1,29 +1,60 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Fil rouge AFPA</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">  
+	<%-- ${ session_client.id } --%>	
+   	<c:choose>
+		<c:when test="${empty session_client }">
+           	<a class="nav-link navbar-brand" href="connexion">Me connecter<span class="sr-only">(current)</span></a>
+		</c:when>
+		<c:otherwise>
+			<c:if test="${ isGuest=='vrai' }">
+	           	<a class="nav-link navbar-brand" href="connexion">Me connecter<span class="sr-only">(current)</span></a>
+			</c:if>
+			<c:if test="${ isGuest!='vrai' }">
+				<a class="nav-link navbar-brand dropdown-toggle" href="" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	           		${ session_client.prenom } ${ session_client.nom } 
+	           	</a>
+	           	<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	           		<a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/monPanier">Mon panier en cours</a>
+	           		<a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/listeCommandes">Mes commandes</a>
+	                <a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/services?role=deconnexion">Me déconnecter</a>
+	            </div>   
+			</c:if>			      	
+		</c:otherwise>
+	</c:choose> 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-        <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown link
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-        </li>
-        </ul>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <ul class="navbar-nav">  
+        	<c:if test="${ !empty session_panier }">
+        		<li class="nav-item">
+				<a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/monPanier">
+			    	<img src="<c:url value="/inc/panier.png"/>" alt="..." class="rounded" style="max-width: 33px;">
+			    	${ session_panier.nombreProduits }
+			    </a>
+			</li>  
+        	</c:if>
+        	 		
+	        <li class="nav-item">
+	            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/listeProduits">Produits</a>	            
+	        </li>	        
+	        <c:choose>
+				<c:when test="${session_client.statut=='administrateur'}">
+		          	<li class="nav-item">
+			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
+			        </li>
+				</c:when>
+				<c:when test="${session_client.statut=='magasinier'}">
+		          	<li class="nav-item">
+			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
+			        </li>
+				</c:when>
+				<c:when test="${session_client.statut=='direction'}">
+		          	<li class="nav-item">
+			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
+			        </li>
+				</c:when>				
+			</c:choose>			
+        </ul>  
     </div>
 </nav>
+<%-- <script type="text/javascript" src="<c:url value="/inc/scriptsJS/script.js"/>"></script> --%>

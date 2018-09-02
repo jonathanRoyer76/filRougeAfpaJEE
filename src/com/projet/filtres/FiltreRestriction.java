@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 public class FiltreRestriction implements Filter {
 
 	public static final String	ACCES_REFUSE	= "/accesRefuse";
-	private static final String	CLIENT_SESSION	= "client_session";
 
 	@Override
 	public void destroy() {
@@ -40,7 +39,7 @@ public class FiltreRestriction implements Filter {
 		}
 
 		// Si l'utilisateur n'est pas loggé
-		if (session.getAttribute(CLIENT_SESSION) == null) {
+		if (session.getAttribute(com.projet.servlets.Services.SESSION_CLIENT) == null) {
 			// Redirection vers la page de refus
 			response.sendRedirect(request.getContextPath() + ACCES_REFUSE);
 		} else {
