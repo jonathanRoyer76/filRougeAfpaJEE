@@ -58,49 +58,54 @@ public class ClientDAO extends DAO<Client> {
 	}
 
 	@Override
-	public Client insereNouveau(Client param) throws BDDException, SQLException {
+	public Client insereNouveau(Client param) throws BDDException {
 
 		// Appeler la procédure stockée
-		ps_insert = connexionBDD.prepareCall("call sp_insert_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		try {
+			ps_insert = connexionBDD.prepareCall("call sp_insert_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-		ps_insert.setString(1, param.getDateInscription());
-		ps_insert.setString(2, param.getNom());
-		ps_insert.setString(3, param.getPrenom());
-		ps_insert.setString(4, param.getSexe());
-		ps_insert.setString(5, param.getMail());
-		ps_insert.setString(6, param.getTelephone());
-		ps_insert.setString(7, ((param.getDateNaissance().isEmpty()) ? null : param.getDateNaissance()));
-		ps_insert.setString(8, param.getAdresse());
-		ps_insert.setInt(9, ((param.getCodePostal().isEmpty()) ? 0 : Integer.parseInt(param.getCodePostal())));
-		ps_insert.setString(10, param.getVille());
-		ps_insert.setString(11, param.getPays());
-		ps_insert.setString(12, param.getCommentaire());
-		ps_insert.setString(13, param.getMdp());
-		ps_insert.registerOutParameter(14, java.sql.Types.INTEGER);
-		ps_insert.registerOutParameter(15, java.sql.Types.VARCHAR);
-		ps_insert.registerOutParameter(16, java.sql.Types.INTEGER);
+			ps_insert.setString(1, param.getDateInscription());
+			ps_insert.setString(2, param.getNom());
+			ps_insert.setString(3, param.getPrenom());
+			ps_insert.setString(4, param.getSexe());
+			ps_insert.setString(5, param.getMail());
+			ps_insert.setString(6, param.getTelephone());
+			ps_insert.setString(7, ((param.getDateNaissance().isEmpty()) ? null : param.getDateNaissance()));
+			ps_insert.setString(8, param.getAdresse());
+			ps_insert.setInt(9, ((param.getCodePostal().isEmpty()) ? 0 : Integer.parseInt(param.getCodePostal())));
+			ps_insert.setString(10, param.getVille());
+			ps_insert.setString(11, param.getPays());
+			ps_insert.setString(12, param.getCommentaire());
+			ps_insert.setString(13, param.getMdp());
+			ps_insert.registerOutParameter(14, java.sql.Types.INTEGER);
+			ps_insert.registerOutParameter(15, java.sql.Types.VARCHAR);
+			ps_insert.registerOutParameter(16, java.sql.Types.INTEGER);
 
-		ps_insert.execute();
+			ps_insert.execute();
 
-		int id = ps_insert.getInt(16);
-		String erreurMessage = ps_insert.getString(15);
-		int erreurCode = ps_insert.getInt(14);
+			int id = ps_insert.getInt(16);
+			String erreurMessage = ps_insert.getString(15);
+			int erreurCode = ps_insert.getInt(14);
 
-		// Gérer les exceptions provenants de la BDD et les lancer
-		switch (erreurCode) {
-		case 0:
-			// Tout s'est bien passé
-			if (id != 0)
-				param.setId(id);
-			break;
-		case 1062:
-			throw new BDDException(erreurCode, "Cet utilisateur est déjà présent dans la BDD");
-		case 1022:
-			throw new BDDException(erreurCode, "Cet utilisateur est déjà présent dans la BDD");
-		case 1292:
-			throw new BDDException(erreurCode, erreurMessage);
-		default:
-			throw new BDDException(erreurCode, "Une erreur s'est produite, merci de contacter l'administrateur.");
+			// Gérer les exceptions provenants de la BDD et les lancer
+			switch (erreurCode) {
+			case 0:
+				// Tout s'est bien passé
+				if (id != 0)
+					param.setId(id);
+				break;
+			case 1062:
+				throw new BDDException(erreurCode, "Cet utilisateur est déjà présent dans la BDD");
+			case 1022:
+				throw new BDDException(erreurCode, "Cet utilisateur est déjà présent dans la BDD");
+			case 1292:
+				throw new BDDException(erreurCode, erreurMessage);
+			default:
+				throw new BDDException(erreurCode, "Une erreur s'est produite, merci de contacter l'administrateur.");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return param;
@@ -154,7 +159,7 @@ public class ClientDAO extends DAO<Client> {
 			if (!resultset.isLast()) {
 				statement = connexionBDD.prepareCall("select * from client where mail_client=?");
 				statement.setString(1, mail);
-				flag_vue=false; 
+				flag_vue = false;
 				resultset = statement.executeQuery();
 			}
 			while (resultset.next()) {
@@ -171,7 +176,7 @@ public class ClientDAO extends DAO<Client> {
 				clientRetour.setVille(resultset.getString("ville_client"));
 				clientRetour.setPays(resultset.getString("pays_client"));
 				clientRetour.setCommentaire(resultset.getString("commentaire_client"));
-				clientRetour.setStatut((flag_vue)?resultset.getString("statut"):"administrateur"); 				
+				clientRetour.setStatut((flag_vue) ? resultset.getString("statut") : "administrateur");
 			}
 		} catch (SQLException e) {
 			new BDDException(e.getErrorCode(), "Erreur dans la récupération des infos du client lors de la connexion")

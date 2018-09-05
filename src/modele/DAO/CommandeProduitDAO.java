@@ -24,7 +24,7 @@ public class CommandeProduitDAO extends DAO<CommandeProduit> {
 
 	public CommandeProduit insereNouveau(CommandeProduit param, Client client) throws BDDException, SQLException {
 		CommandeProduit retour = new CommandeProduit();
-		
+
 		CallableStatement statement = connexionBDD.prepareCall("call sp_insert_produit_commande(?,?,?,?,?,?,?,?,?,?)");
 		statement.setInt(1, param.getIdCommande());
 		statement.setInt(2, client.getId());
@@ -36,12 +36,12 @@ public class CommandeProduitDAO extends DAO<CommandeProduit> {
 		statement.registerOutParameter(8, java.sql.Types.INTEGER);
 		statement.registerOutParameter(9, java.sql.Types.VARCHAR);
 		statement.registerOutParameter(10, java.sql.Types.INTEGER);
-		
+
 		statement.execute();
-		
+
 		int erreurCode = statement.getInt(8);
-		String erreurMessage = statement.getString(9);		
-		
+		String erreurMessage = statement.getString(9);
+
 		switch (erreurCode) {
 		case -1:
 			retour.setIdCommandeProduit(statement.getInt(10));
@@ -54,13 +54,16 @@ public class CommandeProduitDAO extends DAO<CommandeProduit> {
 			throw new BDDException(erreurCode, erreurMessage);
 		case 20009:
 			throw new BDDException(erreurCode, erreurMessage);
+		case 20010:
+//			System.out.println("Mise à jour effectuée");
+			break;
 //		default :
 //			throw new BDDException(erreurCode, "Erreur inattendue dans linsertion du produit dans la commande");
 		}
-				
+
 		return retour;
 	}
-	
+
 	@Override
 	public CommandeProduit insereNouveau(CommandeProduit param) throws BDDException, SQLException {
 		return null;

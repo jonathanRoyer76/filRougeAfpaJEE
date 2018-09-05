@@ -20,43 +20,48 @@ import modele.DAO.DAOFactory;
  */
 @WebServlet("/listeCommandesClient")
 public class listeCommandesClient extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final String VUE = "/admin/listeCommandesClient.jsp";
-	private static final String ATT_LISTE_COMMANDES = "listeCommandes";
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public listeCommandesClient() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	private static final long	serialVersionUID	= 1L;
+	private static final String	VUE					= "/admin/listeCommandesClient.jsp";
+	private static final String	ATT_LISTE_COMMANDES	= "listeCommandes";
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
-		Client client = (Client) request.getSession().getAttribute("client_session");
-		
-		if (client!=null) {
-			try {
-				listeCommandes = DAOFactory.getCommandeDAO().getListeByIdClient(client.getId());
-			} catch (BDDException e) {
-				Services.afficheErreur("Erreur lors de l'obtention de la liste des commandes", "Les commandes n'ont pas pu être récupérées");
-			}
-		}
-		
-		request.getSession().setAttribute(ATT_LISTE_COMMANDES, listeCommandes);
-		request.getRequestDispatcher(VUE).forward(request, response);
-		
+	public listeCommandesClient() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
+		Client client = (Client) request.getSession().getAttribute(com.projet.servlets.Services.SESSION_CLIENT);
+
+		if (client != null) {
+			try {
+				listeCommandes = DAOFactory.getCommandeDAO().getListeByIdClient(client.getId());
+			} catch (BDDException e) {
+				Services.afficheErreur("Erreur lors de l'obtention de la liste des commandes",
+						"Les commandes n'ont pas pu être récupérées");
+			}
+		}
+
+		request.getSession().setAttribute(ATT_LISTE_COMMANDES, listeCommandes);
+		request.getRequestDispatcher(VUE).forward(request, response);
+
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

@@ -3,6 +3,8 @@
 
 @include input_text;
 @include input_password;
+@include input_email;
+@include input_checkbox;
 
 .test{
     color: map-get($mapCouleurPrincipale, base );

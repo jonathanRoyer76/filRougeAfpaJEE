@@ -22,7 +22,7 @@
   <filter-mapping>
     <filter-name>Set Character Encoding</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>  
+  </filter-mapping>
   <welcome-file-list>
     <welcome-file>listeProduits</welcome-file>
   </welcome-file-list>
@@ -82,7 +82,14 @@
     <servlet-name>accesRefuse</servlet-name>
     <url-pattern>/accesRefuse</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>inscription</servlet-name>
+    <servlet-class>com.projet.servlets.Inscription</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>inscription</servlet-name>
+    <url-pattern>/inscription</url-pattern>
+  </servlet-mapping>  
   <filter>
     <filter-name>filtrePanier</filter-name>
     <filter-class>com.projet.filtres.FiltrePanier</filter-class>
@@ -91,7 +98,6 @@
     <filter-name>filtrePanier</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
   <filter>
     <filter-name>filtreRestriction</filter-name>
     <filter-class>com.projet.filtres.FiltreRestriction</filter-class>

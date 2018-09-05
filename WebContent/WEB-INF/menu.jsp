@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-info">  
-	<%-- ${ session_client.id } --%>	
+	 <%-- ${ session_client.id }  --%>
    	<c:choose>
 		<c:when test="${empty session_client }">
            	<a class="nav-link navbar-brand" href="connexion">Me connecter<span class="sr-only">(current)</span></a>
@@ -13,7 +13,7 @@
 	           		${ session_client.prenom } ${ session_client.nom } 
 	           	</a>
 	           	<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-	           		<a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/monPanier">Mon panier en cours</a>
+	           		<c:if test="${ !empty session_panier }"><a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/monPanier">Mon panier en cours</a></c:if>
 	           		<a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/listeCommandes">Mes commandes</a>
 	                <a class="dropdown-item" href="http://localhost:8080/ExoJEEeCommerce/services?role=deconnexion">Me déconnecter</a>
 	            </div>   
@@ -22,7 +22,7 @@
 	</c:choose> 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-    </button>
+    </button>    
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <ul class="navbar-nav">  
         	<c:if test="${ !empty session_panier }">
@@ -33,7 +33,11 @@
 			    </a>
 			</li>  
         	</c:if>
-        	 		
+	        <c:if test="${ isGuest=='vrai' || empty session_client }">	
+	        	<li class="nav-item">
+			        <a class="nav-link" href="inscription">M'inscrire</a>	            
+			    </li> 	
+		    </c:if>
 	        <li class="nav-item">
 	            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/listeProduits">Produits</a>	            
 	        </li>	        

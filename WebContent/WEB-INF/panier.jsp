@@ -43,6 +43,19 @@
 			  </tbody>
 		  </table>
 		</div>
-	</c:if>
+		<c:if test="${ !empty session_client }">
+			<c:if test="${ isGuest != 'vrai' }">
+				<a class="btn btn-info" href="services?role=validationPanier">Valider ma commande</a>
+			</c:if>
+			<c:if test="${ isGuest == 'vrai' }">
+				<a class="btn btn-info" href="inscription">M'inscrire puis valider ma commande</a>
+			</c:if>
+		</c:if>
+		</c:if>
+		<c:if test="${ validationPanier == 'valide' }">
+			<div class="alert alert-success" role="alert">
+  				Commande validé
+			</div>
+		</c:if>
 </body>
 </html>
