@@ -10,7 +10,7 @@
    			<div class="form-row">
 			    <div class="form-group col-md-4">
 			      <label for="nomClient">Nom</label>
-			      <input name ="nomClient" type="text" class="form-control"placeholder="Nom">
+			      <input name ="nomClient" type="text" class="form-control"placeholder="Nom" required>
 			    </div>
 			    <div class="form-group col-md-4">
 			      <label for="prenomClient">Prénom</label>
@@ -19,7 +19,7 @@
 		  	
 			    <div class="form-group col-md-4">
 			      <label for="mailClient">E-mail</label>
-			      <input name ="mailClient" type="email" class="form-control" placeholder="E-mail">
+			      <input name ="mailClient" type="email" class="form-control" placeholder="E-mail" required>
 			    </div>
 		  	</div>
 			<div class="form-row">
@@ -62,12 +62,12 @@
 		  	<div class="form-row">
 			    <div class="form-group col-md-4">
 			      <label for="mdpClient">Mot de passe</label>
-			      <input name="mdpClient" type="password" class="form-control" placeholder="Mot de passe">
+			      <input name="mdpClient" type="password" class="form-control" placeholder="Mot de passe" required>
 			    </div>
 		  	
 			    <div class="form-group col-md-4">
 			      <label for="confirmeMdp">Confirmer le mot de passe</label>
-			      <input name ="confirmeMdp" type="password" class="form-control"placeholder="Confirmer le mot de passe">
+			      <input name ="confirmeMdp" type="password" class="form-control"placeholder="Confirmer le mot de passe" required>
 			    </div>
 		  	</div>
 		  	<button class="btn btn-primary">Valider l'inscription</button>
@@ -75,7 +75,8 @@
 	</body>
     <script>
         $('#dateNaissance').datepicker({
-            uiLibrary: 'bootstrap4'
+            uiLibrary: 'bootstrap4',
+            format: 'dd/mm/yyyy'
         });
     </script>
 </html>

@@ -107,6 +107,8 @@ public class Services extends HttpServlet {
 		}
 	}
 
+	// Enregistre un nouveau client
+
 	// Supprime le panier en mémoire de la session et du cookie
 	public void disposePanier() {
 		if (Panier.getPanierSession(requeteEnCours) != null && requeteEnCours != null) {
@@ -288,7 +290,6 @@ public class Services extends HttpServlet {
 						if (retour.getIdCommandeProduit() != 0) {
 							// L'ajout du produit a réussi
 							panier = Panier.getPanierByIdClient(client.getId());
-//							panier = Panier.getPanierByIdPanier(retour.getIdCommande());
 							if (panier != null) {
 								Panier.sauvePanier(requeteEnCours, reponseAttendue, panier);
 								sauveClient(client);
@@ -301,9 +302,9 @@ public class Services extends HttpServlet {
 								"Une erreur est survenue lors de l'ajout du produit dans le panier");
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
-						// modele.Services.afficheErreur("Problème avec le panier", "Une erreur est
-						// survenue lors de l'ajout du produit dans le panier");
+//						e.printStackTrace();
+						modele.Services.afficheErreur("Problème avec le panier",
+								"Une erreur est survenue lors de l'ajout du produit dans le panier");
 					}
 				}
 			}

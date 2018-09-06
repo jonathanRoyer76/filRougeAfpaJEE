@@ -98,6 +98,12 @@ public class ClientDAO extends DAO<Client> {
 				throw new BDDException(erreurCode, "Cet utilisateur est déjà présent dans la BDD");
 			case 1022:
 				throw new BDDException(erreurCode, "Cet utilisateur est déjà présent dans la BDD");
+			case 20001:
+				throw new BDDException(erreurCode, "le nom est vide");
+			case 20002:
+				throw new BDDException(erreurCode, "le mail est vide");
+			case 20003:
+				throw new BDDException(erreurCode, "le mot de passe est vide");
 			case 1292:
 				throw new BDDException(erreurCode, erreurMessage);
 			default:
