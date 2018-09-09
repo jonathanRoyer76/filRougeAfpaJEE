@@ -40,23 +40,13 @@
 		    </c:if>
 	        <li class="nav-item">
 	            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/listeProduits">Produits</a>	            
-	        </li>	        
+	        </li>	       
 	        <c:choose>
-				<c:when test="${session_client.statut=='administrateur'}">
+				<c:when test="${session_client.statut=='administrateur'||session_client.statut=='magasinier'||session_client.statut=='direction'}">
 		          	<li class="nav-item">
 			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
 			        </li>
-				</c:when>
-				<c:when test="${session_client.statut=='magasinier'}">
-		          	<li class="nav-item">
-			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
-			        </li>
-				</c:when>
-				<c:when test="${session_client.statut=='direction'}">
-		          	<li class="nav-item">
-			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
-			        </li>
-				</c:when>				
+				</c:when>			
 			</c:choose>			
         </ul>  
     </div>

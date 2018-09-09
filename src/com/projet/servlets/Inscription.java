@@ -1,6 +1,7 @@
 package com.projet.servlets;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,7 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import modele.BDDException;
 import modele.Client;
+import modele.DAO.DAOFactory;
+import sun.security.jca.GetInstance;
 
 /**
  * Servlet implementation class Inscription
@@ -94,14 +98,14 @@ public class Inscription extends HttpServlet {
 			break;
 		}
 
-		// Tester la date de naissance et la convertir au besoin
-		System.out.println("date: " + dateNaissanceClient);
-		System.out.println(mdpClient + "\t" + confirmeMdpClient);
+		// Teste la date de naissance et la convertit au besoin
+		if (dateNaissanceClient!="") dateNaissanceClient=modele.Services.parseDatePourBDD(dateNaissanceClient);
 
 		// Si les 2 mdp sont identiques
-		if (mdpClient == confirmeMdpClient) {
+		if (mdpClient.equals(confirmeMdpClient)) {
 			// Affectation dans l'objet à manipuler
 			Client client = new Client();
+			client.setId(0);
 			client.setDateInscription(null);
 			client.setNom(nomClient);
 			client.setPrenom(prenomClient);
@@ -114,7 +118,19 @@ public class Inscription extends HttpServlet {
 			client.setVille(villeClient);
 			client.setPays(paysClient);
 			client.setMdp(mdpClient);
-			System.out.println("plop");
+
+			// Hashage du MDP
+			
+			// Ajout
+			try {
+				client = DAOFactory.getClientDAO().insereNouveau(client);
+				if (client.getId()!=0) {
+					Connexion.connexion_client(request, response, client.getMail(), client.getMdp());
+				}
+			} catch (BDDException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else
 			modele.Services.afficheErreur("Erreur de saisie", "Les mots de passes saisis ne sont pas identiques");
 	}

@@ -62,8 +62,12 @@ public class Connexion extends HttpServlet {
 		 */
 
 		String mail = ((request.getParameter(PARAM_MAIL) != "") ? request.getParameter(PARAM_MAIL) : "");
-		String mdp = ((request.getParameter(PARAM_MDP) != "") ? request.getParameter(PARAM_MDP) : "");
-
+		String mdp = ((request.getParameter(PARAM_MDP) != "") ? request.getParameter(PARAM_MDP) : "");	
+		
+		connexion_client(request, response, mail, mdp);		
+	}
+	
+	public static void connexion_client(HttpServletRequest request, HttpServletResponse response, String mail, String mdp) {
 		// Si les infos saisies sont vérifiables dans la bdd
 		if (mail != "" && mdp != "") {
 			try {
@@ -94,15 +98,33 @@ public class Connexion extends HttpServlet {
 							request.getSession().setAttribute(services.SESSION_IS_CLIENT_GUEST, "faux");
 						}
 					}
-					response.sendRedirect(request.getContextPath() + ACCES_LISTE_PRODUITS);
+					try {
+						response.sendRedirect(request.getContextPath() + ACCES_LISTE_PRODUITS);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
-					this.getServletContext().getRequestDispatcher(ACCES_REFUSE).forward(request, response);
+					try {
+						request.getServletContext().getRequestDispatcher(ACCES_REFUSE).forward(request, response);
+					} catch (ServletException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			} catch (BDDException e) {
 				e.printStackTrace();
 			}
 		} else {
-			this.getServletContext().getRequestDispatcher(ACCES_REFUSE).forward(request, response);
+			try {
+				request.getServletContext().getRequestDispatcher(ACCES_REFUSE).forward(request, response);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -162,12 +162,12 @@ public class ClientDAO extends DAO<Client> {
 			statement.setString(1, mail);
 			ResultSet resultset = statement.executeQuery();
 			boolean flag_vue = true;
-			if (!resultset.isLast()) {
-				statement = connexionBDD.prepareCall("select * from client where mail_client=?");
-				statement.setString(1, mail);
-				flag_vue = false;
-				resultset = statement.executeQuery();
-			}
+//			if (!resultset.isLast()) {
+//				statement = connexionBDD.prepareCall("select * from client where mail_client=?");
+//				statement.setString(1, mail);
+//				flag_vue = false;
+//				resultset = statement.executeQuery();
+//			}
 			while (resultset.next()) {
 				clientRetour.setId(resultset.getInt("id_client"));
 				clientRetour.setDateInscription(resultset.getString("date_inscription_client"));
@@ -182,7 +182,8 @@ public class ClientDAO extends DAO<Client> {
 				clientRetour.setVille(resultset.getString("ville_client"));
 				clientRetour.setPays(resultset.getString("pays_client"));
 				clientRetour.setCommentaire(resultset.getString("commentaire_client"));
-				clientRetour.setStatut((flag_vue) ? resultset.getString("statut") : "administrateur");
+				clientRetour.setStatut(resultset.getString("statut"));
+//				clientRetour.setStatut((flag_vue) ? resultset.getString("statut") : "classic");
 			}
 		} catch (SQLException e) {
 			new BDDException(e.getErrorCode(), "Erreur dans la récupération des infos du client lors de la connexion")

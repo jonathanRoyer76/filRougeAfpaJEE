@@ -1,5 +1,8 @@
 package modele;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -14,9 +17,9 @@ import javax.swing.JOptionPane;
 public class Services {
 	
 	//Format de conditionnement des dates à la française
-	private final String formatDateFR = "dd/MM/yyyy";
+	private static final String formatDateFR = "dd/MM/yyyy";
 	//Format de Date-heure pour la BDD
-	private final String  formatDateHeureBDD = "yyyy-MM-dd hh:mm:ss";	 
+	private static final String  formatDateHeureBDD = "yyyy-MM-dd hh:mm:ss";	 
 	//Regex vérifiant la date pour un format dd/mm/yyyy, dd.mm.yy ou dd-mm-yyyy
 	private final Pattern regExDate= Pattern.compile("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$", Pattern.CASE_INSENSITIVE);
 		
@@ -38,6 +41,40 @@ public class Services {
 				commande.setNombreProduits(totalProduits);
 			}
 		}
+	}
+	
+	// Crypte le MDP pour la BDD
+	public static String encodeMdp(String mdp) {
+		String retour =null;
+		
+		try {
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			if (digest!=null) {
+				byte[] temp = digest.digest(mdp.getBytes(StandardCharsets.UTF_8));
+				retour=temp.toString();
+			}
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return retour;
+	}
+	
+	// Décrypte le MDP depuis la bdd
+	public static String decodeMdp(String mdpCrypte) {
+		String retour="";
+		byte[] mdp = mdpCrypte.getBytes(StandardCharsets.UTF_8);
+		
+		StringBuffer buffer = new StringBuffer();
+		for (int i=0;i<mdp.length; i++) {
+			String temp = Integer.toHexString(0xff & mdp[i]);
+			if (temp.length()==1) buffer.append('0');
+			buffer.append(temp);
+		}
+		retour = buffer.toString();
+		
+		return retour;
 	}
 		
 	//Renvoie une date formattée en dd/mm/yyyy
@@ -62,7 +99,7 @@ public class Services {
 	}
 	
 	//Prépare une date pour une insertion dans la BDD en partant d'une date
-	public String parseDatePourBDD(String stringDate) {
+	public static String parseDatePourBDD(String stringDate) {
 		String retour="";
 		
 		try {
