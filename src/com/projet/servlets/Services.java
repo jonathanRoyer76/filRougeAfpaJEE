@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import modele.BDDException;
+import modele.CAHTMensuel;
 import modele.Client;
 import modele.Commande;
 import modele.CommandeProduit;
@@ -23,36 +26,41 @@ import modele.DAO.DAOFactory;
  */
 @WebServlet("/Services")
 public class Services extends HttpServlet {
-	private static final long	serialVersionUID			= 1L;
+	private static final long	serialVersionUID						= 1L;
 
 	// Les valeurs stockées en session/cookies
 	// Le client en session
-	public static final String	SESSION_CLIENT				= "session_client";
+	public static final String	SESSION_CLIENT							= "session_client";
 	// Le panier en session
-	public static final String	SESSION_PANIER				= "session_panier";
+	public static final String	SESSION_PANIER							= "session_panier";
 	// L'id du panier en cooie
-	public static final String	COOKIE_ID_COMMANDE_PANIER	= "cookie_id_commande_panier";
+	public static final String	COOKIE_ID_COMMANDE_PANIER				= "cookie_id_commande_panier";
 	// L'id du client ayant fait le panier, en cookie
-	public static final String	COOKIE_ID_CLIENT_PANIER		= "cookie_id_client_panier";
+	public static final String	COOKIE_ID_CLIENT_PANIER					= "cookie_id_client_panier";
 	// Si le client connecté est un invité, valeur : vrai
-	public static final String	SESSION_IS_CLIENT_GUEST		= "isGuest";
+	public static final String	SESSION_IS_CLIENT_GUEST					= "isGuest";
 	// Si le client connecté est un invité, valeur : vrai
-	public static final String	SESSION_PANIER_VALIDE		= "session_panier_valide";
+	public static final String	SESSION_PANIER_VALIDE					= "session_panier_valide";
 
 	// Les rôles que peut remplir le service
-	private static final String	ROLE						= "role";
-	private static final String	ROLE_DECONNEXION			= "deconnexion";
-	private static final String	ROLE_AJOUT_PANIER			= "ajoutPanier";
-	private static final String	ROLE_VALIDATION_PANIER		= "validationPanier";
+	private static final String	ROLE									= "role";
+	private static final String	ROLE_DECONNEXION						= "deconnexion";
+
+	private static final String	ROLE_DIRECTION_LISTE_STOCK_ALERT		= "direction_stock_alert";
+	private static final String	ROLE_DIRECTION_LISTE_STOCK_GENERAL		= "direction_stock_general";
+	private static final String	ROLE_DIRECTION_CAHT_MENSUEL_FAMILLES	= "direction_CAHT_mensuel";
+
+	private static final String	ROLE_AJOUT_PANIER						= "ajoutPanier";
+	private static final String	ROLE_VALIDATION_PANIER					= "validationPanier";
 
 	// Contient la requète ayant mené à la servlet
-	private HttpServletRequest	requeteEnCours				= null;
+	private HttpServletRequest	requeteEnCours							= null;
 	// Contient la réponse attendue, avec la requète
-	private HttpServletResponse	reponseAttendue				= null;
+	private HttpServletResponse	reponseAttendue							= null;
 
 	// Route vers le panier
-	private final String		VUE_PANIER					= "/monPanier";
-	private final String		VUE_LISTE_PRODUITS			= "/listeProduits";
+	private final String		VUE_PANIER								= "/monPanier";
+	private final String		VUE_LISTE_PRODUITS						= "/listeProduits";
 
 	public HttpServletRequest getRequeteEnCours() {
 		return requeteEnCours;
@@ -103,11 +111,83 @@ public class Services extends HttpServlet {
 			case ROLE_VALIDATION_PANIER:
 				this.validePanierSession();
 				break;
+			case ROLE_DIRECTION_LISTE_STOCK_ALERT:
+				this.directionListeStocksAlert();
+				break;
+			case ROLE_DIRECTION_LISTE_STOCK_GENERAL:
+				this.directionListeStocksGeneral();
+				break;
+			case ROLE_DIRECTION_CAHT_MENSUEL_FAMILLES:
+				this.directionCAHTMensuel();
+				break;
 			}
 		}
 	}
 
-	// Enregistre un nouveau client
+	// Pour la direction la répartition du CAHT par famille
+	private void directionCAHTMensuel() {
+		ArrayList<CAHTMensuel> listeProduits = new ArrayList<CAHTMensuel>();
+		try {
+			listeProduits = DAOFactory.getCommandeDAO().getCAMensuel();
+		} catch (BDDException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (listeProduits.size() > 0 && reponseAttendue != null) {
+
+			Gson parser = new Gson();
+
+			String json = parser.toJson(listeProduits);
+			reponseAttendue.setContentType("application/json");
+			reponseAttendue.setCharacterEncoding("UTF-8");
+			try {
+				reponseAttendue.getWriter().write(json);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// Pour la direction la liste des produits en stocks limites
+	private void directionListeStocksAlert() {
+
+		ArrayList<Produit> listeProduits = DAOFactory.getProduitDAO().getListeDirectionStockAlert();
+		if (listeProduits.size() > 0 && reponseAttendue != null) {
+
+			Gson parser = new Gson();
+
+			String json = parser.toJson(listeProduits);
+			reponseAttendue.setContentType("application/json");
+			reponseAttendue.setCharacterEncoding("UTF-8");
+			try {
+				reponseAttendue.getWriter().write(json);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	// Pour la direction la liste complète des produits
+	private void directionListeStocksGeneral() {
+		ArrayList<Produit> listeProduits = DAOFactory.getProduitDAO().getListeDirectionStocks();
+		if (listeProduits.size() > 0 && reponseAttendue != null) {
+
+			Gson parser = new Gson();
+
+			String json = parser.toJson(listeProduits);
+			reponseAttendue.setContentType("application/json");
+			reponseAttendue.setCharacterEncoding("UTF-8");
+			try {
+				reponseAttendue.getWriter().write(json);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 	// Supprime le panier en mémoire de la session et du cookie
 	public void disposePanier() {
@@ -115,6 +195,7 @@ public class Services extends HttpServlet {
 			requeteEnCours.getSession().setAttribute(SESSION_PANIER, null);
 			if (reponseAttendue != null)
 				reponseAttendue.addCookie(new Cookie(COOKIE_ID_COMMANDE_PANIER, ""));
+			requeteEnCours.getSession().setAttribute(SESSION_PANIER, null);
 		}
 	}
 

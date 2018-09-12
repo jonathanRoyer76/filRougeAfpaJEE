@@ -5,9 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import modele.BDDException;
+import modele.CAHTMensuel;
 import modele.Client;
 import modele.Commande;
 import modele.Produit;
@@ -27,6 +29,29 @@ public class CommandeDAO extends DAO<Commande> {
 
 	public int insereNouveau(int idClient, Produit produit, int quantite) throws BDDException {
 		return 0;
+	}
+
+	// Pour la direction, retourne la répartition du CAHT par famille
+	public ArrayList<CAHTMensuel> getCAMensuel() throws BDDException {
+		ArrayList<CAHTMensuel> listeRetour = new ArrayList<CAHTMensuel>();
+
+		try {
+			Statement state = connexionBDD.createStatement();
+			ResultSet set = state.executeQuery("select * from vue_CAHT_parFamille_moisEnCours");
+			while (set.next()) {
+				CAHTMensuel temp = new CAHTMensuel();
+				temp.setCAHT(set.getInt("totalHTProduit"));
+				temp.setLibelleFamille(set.getString("libelleFamille"));
+				listeRetour.add(temp);
+
+			}
+		} catch (SQLException e) {
+//			Services.afficheErreur("Erreur avec la base de données",
+//					"Impossible de récupérer la liste des produits en stock");
+			e.printStackTrace();
+		}
+
+		return listeRetour;
 	}
 
 	public ArrayList<Commande> getListeByIdClient(int idClient) throws BDDException {
@@ -177,8 +202,8 @@ public class CommandeDAO extends DAO<Commande> {
 				}
 			}
 		} catch (SQLException e) {
-			Services.afficheErreur("Erreur dans la récupération du panier", "Une erreur imprévue est survenue");
-//			e.printStackTrace();
+//			Services.afficheErreur("Erreur dans la récupération du panier", "Une erreur imprévue est survenue");
+			e.printStackTrace();
 		}
 
 		return retour;
@@ -223,8 +248,8 @@ public class CommandeDAO extends DAO<Commande> {
 				}
 			}
 		} catch (SQLException e) {
-			Services.afficheErreur("Erreur dans la récupération du panier", "Une erreur imprévue est survenue");
-//				e.printStackTrace();
+//			Services.afficheErreur("Erreur dans la récupération du panier", "Une erreur imprévue est survenue");
+			e.printStackTrace();
 		}
 
 		return retour;

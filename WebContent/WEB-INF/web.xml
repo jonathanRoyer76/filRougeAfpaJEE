@@ -66,6 +66,16 @@
     <servlet-name>listeCommandesClient</servlet-name>
     <url-pattern>/listeCommandes</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>dashboardDirection</servlet-name>
+    <servlet-class>com.projet.servlets.DashboardDirection</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dashboardDirection</servlet-name>
+    <url-pattern>/admin/direction</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>panier</servlet-name>
     <servlet-class>com.projet.servlets.Panier</servlet-class>
@@ -89,7 +99,7 @@
   <servlet-mapping>
     <servlet-name>inscription</servlet-name>
     <url-pattern>/inscription</url-pattern>
-  </servlet-mapping>  
+  </servlet-mapping>
   <filter>
     <filter-name>filtrePanier</filter-name>
     <filter-class>com.projet.filtres.FiltrePanier</filter-class>

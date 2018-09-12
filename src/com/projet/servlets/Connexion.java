@@ -20,12 +20,12 @@ import modele.DAO.DAOFactory;
  */
 @WebServlet("/Connexion")
 public class Connexion extends HttpServlet {
-	private static final long	serialVersionUID	= 1L;
-	private static final String	VUE					= "/WEB-INF/connexion.jsp";
-	private static final String	ACCES_REFUSE		= "/WEB-INF/accesRefuse.jsp";
+	private static final long	serialVersionUID		= 1L;
+	private static final String	VUE						= "/WEB-INF/connexion.jsp";
+	private static final String	ACCES_REFUSE			= "/WEB-INF/accesRefuse.jsp";
 	private static final String	ACCES_LISTE_PRODUITS	= "/";
-	private static final String	PARAM_MAIL			= "mail";
-	private static final String	PARAM_MDP			= "mdp";
+	private static final String	PARAM_MAIL				= "mail";
+	private static final String	PARAM_MDP				= "mdp";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -62,12 +62,13 @@ public class Connexion extends HttpServlet {
 		 */
 
 		String mail = ((request.getParameter(PARAM_MAIL) != "") ? request.getParameter(PARAM_MAIL) : "");
-		String mdp = ((request.getParameter(PARAM_MDP) != "") ? request.getParameter(PARAM_MDP) : "");	
-		
-		connexion_client(request, response, mail, mdp);		
+		String mdp = ((request.getParameter(PARAM_MDP) != "") ? request.getParameter(PARAM_MDP) : "");
+
+		connexion_client(request, response, mail, mdp);
 	}
-	
-	public static void connexion_client(HttpServletRequest request, HttpServletResponse response, String mail, String mdp) {
+
+	public static void connexion_client(HttpServletRequest request, HttpServletResponse response, String mail,
+			String mdp) {
 		// Si les infos saisies sont vérifiables dans la bdd
 		if (mail != "" && mdp != "") {
 			try {
@@ -77,24 +78,30 @@ public class Connexion extends HttpServlet {
 					com.projet.servlets.Services services = new com.projet.servlets.Services();
 					services.setRequeteEnCours(request);
 					services.setReponseAttendue(response);
-					
+
 					// Si l'on a un panier pour un guest et si le client se connectant en a un aussi
 					Commande panierSession = Panier.getPanierSession(request);
 					boolean continuer = true;
-					if (panierSession!=null && client!=null) {
-						if (panierSession.getClient().getId()!=client.getId()) {
-							// 2 paniers différents détectés
-							int resultatSaisie = JOptionPane.showConfirmDialog (null, "Un panier est déjà en cours sur cet ordinateur. Vous connecter le supprimera, voulez-vous continer ?","Warning",JOptionPane.YES_NO_OPTION);
-							if(resultatSaisie != JOptionPane.YES_OPTION){
-								continuer=false;
+					if (panierSession != null && client != null) {
+						Client temp = panierSession.getClient();
+						if (temp != null) {
+							if (temp.getId() != client.getId()) {
+								// 2 paniers différents détectés
+								int resultatSaisie = JOptionPane.showConfirmDialog(null,
+										"Un panier est déjà en cours sur cet ordinateur. Vous connecter le supprimera, voulez-vous continer ?",
+										"Warning", JOptionPane.YES_NO_OPTION);
+								if (resultatSaisie != JOptionPane.YES_OPTION) {
+									continuer = false;
+								}
 							}
 						}
 					}
 					if (continuer) {
-						if (client!=null) {
+						if (client != null) {
 							services.sauveClient(client);
 							Commande panier = Panier.getPanierByIdClient(client.getId());
-							if (panier!=null)Panier.sauvePanier(request, response, panier);
+							if (panier != null)
+								Panier.sauvePanier(request, response, panier);
 							request.getSession().setAttribute(services.SESSION_IS_CLIENT_GUEST, "faux");
 						}
 					}

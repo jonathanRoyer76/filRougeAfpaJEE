@@ -24,12 +24,12 @@ import modele.Commande;
 @WebFilter("/FiltrePanier")
 public class FiltrePanier implements Filter {
 
-    /**
-     * Default constructor. 
-     */
-    public FiltrePanier() {
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * Default constructor.
+	 */
+	public FiltrePanier() {
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see Filter#destroy()
@@ -41,30 +41,33 @@ public class FiltrePanier implements Filter {
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+
 		com.projet.servlets.Services services = new Services();
-		HttpServletRequest requeteEnCours = (HttpServletRequest)request;
-		HttpServletResponse reponseAttendue = (HttpServletResponse)response;
+		HttpServletRequest requeteEnCours = (HttpServletRequest) request;
+		HttpServletResponse reponseAttendue = (HttpServletResponse) response;
 		services.setReponseAttendue(reponseAttendue);
 		services.setRequeteEnCours(requeteEnCours);
-		
-		Commande panier=Panier.getPanierSession(requeteEnCours);
-		if (panier==null) {
+
+		Commande panier = Panier.getPanierSession(requeteEnCours);
+		if (panier == null) {
 			Client client = services.getClientSession();
 			// Si un client est connecté on a pas son panier (s'il en a un)
-			if (client !=null) {
+			if (client != null) {
 				panier = Panier.getPanierByIdClient(client.getId());
-			}else {
-				// Si pas de client connecté, ni de panier en session(comme un première connexion)
+			} else {
+				// Si pas de client connecté, ni de panier en session(comme un première
+				// connexion)
 				int idDernierPanier = Panier.getIdDernierPanier(requeteEnCours);
-				if (idDernierPanier!=0) {
-					panier=Panier.getPanierByIdPanier(idDernierPanier);
-					if (panier!=null) Panier.sauvePanier(requeteEnCours, reponseAttendue, panier);
+				if (idDernierPanier != 0) {
+					panier = Panier.getPanierByIdPanier(idDernierPanier);
+					if (panier != null)
+						Panier.sauvePanier(requeteEnCours, reponseAttendue, panier);
 				} // Sinon pas de panier en cookie ni session
 			}
 		}
-				
+
 		chain.doFilter(request, response);
 	}
 

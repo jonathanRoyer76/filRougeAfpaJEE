@@ -47,7 +47,12 @@
 			            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/listeClients">Liste des clients</a>
 			        </li>
 				</c:when>			
-			</c:choose>			
+			</c:choose>
+			<c:if test="${session_client.statut=='direction'}">
+	          	<li class="nav-item">
+		            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/direction">Dashboard direction</a>
+		        </li>
+			</c:if>			
         </ul>  
     </div>
 </nav>
