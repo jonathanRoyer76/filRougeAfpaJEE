@@ -117,6 +117,60 @@ public class ClientDAO extends DAO<Client> {
 		return param;
 	}
 
+	// Desactive un compte
+	public boolean desactiveCompte(int idClient) {
+		boolean retour = false;
+
+		try {
+			CallableStatement state = connexionBDD.prepareCall("call sp_desactiveCompte(?, ?, ?, ?)");
+			state.setInt(1, idClient);
+			state.registerOutParameter(2, java.sql.Types.INTEGER);
+			state.registerOutParameter(3, java.sql.Types.VARCHAR);
+			state.registerOutParameter(4, java.sql.Types.BOOLEAN);
+			state.execute();
+
+			int errCode = state.getInt(2);
+			String errMessage = state.getString(3);
+			boolean success = state.getBoolean(4);
+
+			if (errCode != 0)
+				Services.afficheErreur("Erreur", "Impossible de désactiver le compte");
+			else
+				retour = true;
+		} catch (SQLException e) {
+			Services.afficheErreur("Erreur", "Impossible de désactiver le compte");
+		}
+
+		return retour;
+	}
+
+	// Active un compte
+	public boolean activeCompte(int idClient) {
+		boolean retour = false;
+
+		try {
+			CallableStatement state = connexionBDD.prepareCall("call sp_activeCompte(?, ?, ?, ?)");
+			state.setInt(1, idClient);
+			state.registerOutParameter(2, java.sql.Types.INTEGER);
+			state.registerOutParameter(3, java.sql.Types.VARCHAR);
+			state.registerOutParameter(4, java.sql.Types.BOOLEAN);
+			state.execute();
+
+			int errCode = state.getInt(2);
+			String errMessage = state.getString(3);
+			boolean success = state.getBoolean(4);
+
+			if (errCode != 0)
+				Services.afficheErreur("Erreur", "Impossible d'activer le compte");
+			else
+				retour = true;
+		} catch (SQLException e) {
+			Services.afficheErreur("Erreur", "Impossible d'activer le compte");
+		}
+
+		return retour;
+	}
+
 	public Client insereNouveauGuest() throws BDDException {
 		Client clientRetour = new Client();
 

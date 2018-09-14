@@ -33,6 +33,8 @@ public class Services extends HttpServlet {
 	public static final String	SESSION_CLIENT							= "session_client";
 	// Le panier en session
 	public static final String	SESSION_PANIER							= "session_panier";
+	// Le panier en session
+	public static final String	SESSION_DETAILS_COMMANDE				= "session_detailsCommande";
 	// L'id du panier en cooie
 	public static final String	COOKIE_ID_COMMANDE_PANIER				= "cookie_id_commande_panier";
 	// L'id du client ayant fait le panier, en cookie
@@ -49,6 +51,8 @@ public class Services extends HttpServlet {
 	private static final String	ROLE_DIRECTION_LISTE_STOCK_ALERT		= "direction_stock_alert";
 	private static final String	ROLE_DIRECTION_LISTE_STOCK_GENERAL		= "direction_stock_general";
 	private static final String	ROLE_DIRECTION_CAHT_MENSUEL_FAMILLES	= "direction_CAHT_mensuel";
+	private static final String	ROLE_DIRECTION_DESACTIVE_COMPTE			= "desactiveCompte";
+	private static final String	ROLE_DIRECTION_ACTIVE_COMPTE			= "activeCompte";
 
 	private static final String	ROLE_AJOUT_PANIER						= "ajoutPanier";
 	private static final String	ROLE_VALIDATION_PANIER					= "validationPanier";
@@ -61,6 +65,7 @@ public class Services extends HttpServlet {
 	// Route vers le panier
 	private final String		VUE_PANIER								= "/monPanier";
 	private final String		VUE_LISTE_PRODUITS						= "/listeProduits";
+	private final String		VUE_LISTE_CLIENTS						= "/admin/listeClients";
 
 	public HttpServletRequest getRequeteEnCours() {
 		return requeteEnCours;
@@ -114,12 +119,51 @@ public class Services extends HttpServlet {
 			case ROLE_DIRECTION_LISTE_STOCK_ALERT:
 				this.directionListeStocksAlert();
 				break;
-			case ROLE_DIRECTION_LISTE_STOCK_GENERAL:
-				this.directionListeStocksGeneral();
-				break;
 			case ROLE_DIRECTION_CAHT_MENSUEL_FAMILLES:
 				this.directionCAHTMensuel();
 				break;
+			case ROLE_DIRECTION_DESACTIVE_COMPTE:
+				int idClient = 0;
+				if (requeteEnCours != null) {
+					idClient = Integer.parseInt(requeteEnCours.getParameter("idClient"));
+					this.desactiveCompte(idClient);
+				}
+				break;
+			case ROLE_DIRECTION_ACTIVE_COMPTE:
+				int idClient1 = 0;
+				if (requeteEnCours != null) {
+					idClient1 = Integer.parseInt(requeteEnCours.getParameter("idClient"));
+					this.activeCompte(idClient1);
+				}
+				break;
+			}
+		}
+	}
+
+	// Pour la direction, active un compte
+	private void activeCompte(int idClient) {
+		boolean retour = false;
+		retour = DAOFactory.getClientDAO().activeCompte(idClient);
+		if (retour && reponseAttendue != null) {
+			try {
+				reponseAttendue.sendRedirect(VUE_LISTE_CLIENTS);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// Pour la direction, désactive un compte
+	private void desactiveCompte(int idClient) {
+		boolean retour = false;
+		retour = DAOFactory.getClientDAO().desactiveCompte(idClient);
+		if (retour && reponseAttendue != null) {
+			try {
+				reponseAttendue.sendRedirect(VUE_LISTE_CLIENTS);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -168,25 +212,6 @@ public class Services extends HttpServlet {
 			}
 		}
 
-	}
-
-	// Pour la direction la liste complète des produits
-	private void directionListeStocksGeneral() {
-		ArrayList<Produit> listeProduits = DAOFactory.getProduitDAO().getListeDirectionStocks();
-		if (listeProduits.size() > 0 && reponseAttendue != null) {
-
-			Gson parser = new Gson();
-
-			String json = parser.toJson(listeProduits);
-			reponseAttendue.setContentType("application/json");
-			reponseAttendue.setCharacterEncoding("UTF-8");
-			try {
-				reponseAttendue.getWriter().write(json);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 
 	// Supprime le panier en mémoire de la session et du cookie

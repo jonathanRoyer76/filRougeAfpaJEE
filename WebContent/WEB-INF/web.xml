@@ -34,6 +34,16 @@
     <servlet-name>connexion</servlet-name>
     <url-pattern>/connexion</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>detailCommande</servlet-name>
+    <servlet-class>com.projet.servlets.Detailcommande</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>detailCommande</servlet-name>
+    <url-pattern>/detailCommande</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>listeClients</servlet-name>
     <servlet-class>com.projet.servlets.ListeClients</servlet-class>
@@ -66,7 +76,6 @@
     <servlet-name>listeCommandesClient</servlet-name>
     <url-pattern>/listeCommandes</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>dashboardDirection</servlet-name>
     <servlet-class>com.projet.servlets.DashboardDirection</servlet-class>
@@ -75,7 +84,6 @@
     <servlet-name>dashboardDirection</servlet-name>
     <url-pattern>/admin/direction</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>panier</servlet-name>
     <servlet-class>com.projet.servlets.Panier</servlet-class>

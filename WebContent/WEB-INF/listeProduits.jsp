@@ -38,18 +38,14 @@
 			</c:forEach>
 		</div>
 		
-		<%-- <script type="text/javascript" src="<c:url value="/inc/scriptsJS/script.js"/>"></script> --%>
 		<script type="text/javascript">
 			function ajoutPanier(idProduit){
-				var xhttp = new XMLHttpRequest();
-			 	xhttp.onreadystatechange = function() {
-				    if (this.readyState == 4 && this.status == 200) {
-				     /* console.log("terminé") */
-				    }
-			  	};
-				  xhttp.open("GET", "services?role=ajoutPanier&idProduit="+idProduit, true);
-				  xhttp.send();
-		    }			
+				console.log($("#totalArticlesPanier").val());
+				$.ajax({
+		            method: "GET",
+		            url: "services?role=ajoutPanier&idProduit="+idProduit
+		        });
+			}
 		</script>
     </body> 
 </html> 

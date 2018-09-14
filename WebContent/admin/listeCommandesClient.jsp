@@ -26,7 +26,7 @@
 			      <td>${ commande.nombreProduits }</td>
 			      <td>${ commande.totalTTCcommande }</td>
 			      <td>${ commande.dernierStatutCommande }</td>
-			      <td><c:if test="${ commande.nombreProduits>0 }"><button class="btn btn-primary">Détails</button></c:if></td>
+			      <td><c:if test="${ commande.nombreProduits>0 }"><a href="detailCommande?idCommande=${ commande.idCommande }" class="btn btn-primary">Détails</a></c:if></td>
 			    </tr>
 		  	</c:forEach>
 		  </tbody>

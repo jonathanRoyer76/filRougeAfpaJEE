@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-info">  
-	 <%-- ${ session_client.id }  --%>
    	<c:choose>
 		<c:when test="${empty session_client }">
            	<a class="nav-link navbar-brand" href="connexion">Me connecter<span class="sr-only">(current)</span></a>
@@ -29,7 +28,7 @@
         		<li class="nav-item">
 				<a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/monPanier">
 			    	<img src="<c:url value="/inc/panier.png"/>" alt="..." class="rounded" style="max-width: 33px;">
-			    	${ session_panier.nombreProduits }
+			    	<span id="totalArticlesPanier">${ session_panier.nombreProduits }</span>
 			    </a>
 			</li>  
         	</c:if>
@@ -56,4 +55,3 @@
         </ul>  
     </div>
 </nav>
-<%-- <script type="text/javascript" src="<c:url value="/inc/scriptsJS/script.js"/>"></script> --%>

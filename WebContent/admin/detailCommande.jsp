@@ -6,7 +6,7 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/menu.jsp" %>
-	<c:if test="${ !empty session_panier }">
+	<c:if test="${ !empty session_detailsCommande }">
 		<div class="table-responsive-xl">
 		  <table class="table table-striped table-hover">
 		    <thead>
@@ -19,7 +19,7 @@
 			    </tr>
 			  </thead>
 			  <tbody>
-			  	<c:forEach items="${ session_panier.listeProduitsCommande }" var="produit">
+			  	<c:forEach items="${ session_detailsCommande.listeProduitsCommande }" var="produit">
 			  		<tr>
 				      <td>${ produit.idProduit }</td>
 				      <td>${ produit.nomProduit }</td>
@@ -30,32 +30,19 @@
 			  	</c:forEach>
 			  	<tr class="table-info">
 			  		<td>Total produits :</td>
-			  		<td>${ session_panier.totalTTCSansRemise }</td>
+			  		<td>${ session_detailsCommande.totalTTCSansRemise }</td>
 			  	</tr>
 			  	<tr>
 			  		<td>Réduction :</td>
-			  		<td>${ session_panier.remiseGlobale }</td>
+			  		<td>${ session_detailsCommande.remiseGlobale }</td>
 			  	</tr>
 			  	<tr class="table-success">
 			  		<td>Total TTC à régler :</td>
-			  		<td>${ session_panier.totalTTCcommande }</td>
+			  		<td>${ session_detailsCommande.totalTTCcommande }</td>
 			  	</tr>
 			  </tbody>
 		  </table>
 		</div>
-		<c:if test="${ !empty session_client }">
-			<c:if test="${ isGuest != 'vrai' }">
-				<a class="btn btn-info" href="services?role=validationPanier">Valider ma commande</a>
-			</c:if>
-			<c:if test="${ isGuest == 'vrai' }">
-				<a class="btn btn-info" href="inscription">M'inscrire puis valider ma commande</a>
-			</c:if>		
-		</c:if>
-		<c:if test="${ validationPanier == 'valide' }">
-			<div class="alert alert-success" role="alert">
-  				Commande validé
-			</div>
-		</c:if>
 	</c:if>
 </body>
 </html>
