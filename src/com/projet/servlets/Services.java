@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import modele.BDDException;
 import modele.CAHTMensuel;
+import modele.CaHtAnneeAvecPaniers;
 import modele.Client;
 import modele.Commande;
 import modele.CommandeProduit;
@@ -53,6 +54,7 @@ public class Services extends HttpServlet {
 	private static final String	ROLE_DIRECTION_CAHT_MENSUEL_FAMILLES	= "direction_CAHT_mensuel";
 	private static final String	ROLE_DIRECTION_DESACTIVE_COMPTE			= "desactiveCompte";
 	private static final String	ROLE_DIRECTION_ACTIVE_COMPTE			= "activeCompte";
+	private static final String	ROLE_DIRECTION_CAHT_ANNEE				= "caht_annee_en_cours";
 
 	private static final String	ROLE_AJOUT_PANIER						= "ajoutPanier";
 	private static final String	ROLE_VALIDATION_PANIER					= "validationPanier";
@@ -136,6 +138,29 @@ public class Services extends HttpServlet {
 					this.activeCompte(idClient1);
 				}
 				break;
+			case ROLE_DIRECTION_CAHT_ANNEE:
+				this.getCAHTAnneeEnCours();
+				break;
+			}
+		}
+	}
+
+	// Pour la direction, obtient le CA HT de l'année en cours
+	private void getCAHTAnneeEnCours() {
+		ArrayList<CaHtAnneeAvecPaniers> cahtAnnuel = new ArrayList<CaHtAnneeAvecPaniers>();
+		cahtAnnuel = DAOFactory.getCommandeDAO().getCAHTAnneeEnCoursAvecPaniers();
+		if (cahtAnnuel.size() > 0 && reponseAttendue != null) {
+
+			Gson parser = new Gson();
+
+			String json = parser.toJson(cahtAnnuel);
+			reponseAttendue.setContentType("application/json");
+			reponseAttendue.setCharacterEncoding("UTF-8");
+			try {
+				reponseAttendue.getWriter().write(json);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

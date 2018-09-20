@@ -1,4 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-info">  
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	</button> 
    	<c:choose>
 		<c:when test="${empty session_client }">
            	<a class="nav-link navbar-brand" href="connexion">Me connecter<span class="sr-only">(current)</span></a>
@@ -18,12 +21,9 @@
 	            </div>   
 			</c:if>			      	
 		</c:otherwise>
-	</c:choose> 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>    
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-        <ul class="navbar-nav">  
+	</c:choose>        
+    <div class="collapse" id="navbarTogglerDemo01">
+        <!-- <ul class="navbar-nav">  --> 
         	<c:if test="${ !empty session_panier }">
         		<li class="nav-item">
 				<a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/monPanier">
@@ -52,6 +52,6 @@
 		            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/direction">Dashboard direction</a>
 		        </li>
 			</c:if>			
-        </ul>  
+        <!-- </ul> -->  
     </div>
 </nav>

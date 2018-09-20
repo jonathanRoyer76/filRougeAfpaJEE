@@ -25,17 +25,17 @@ $(document).ready(function(){
     var stockProduitsAlert=[];
     var stockMiniAlert=[];
     var stockObjectifAlert=[];
+    // Variables du CA HT par familles
+    var libellesFamilles=[];
+    var CaFamilles=[]
+    // Variables du CA HT annuel
+    var libellesMois=[];
+    var CaHTMois=[]
 
-    lancement();
-
-    function lancement(){
-        stock_alert(function(retour){
-            CAHT_mensuel();
-        });
-    }
+    stock_alert();
       
     // Récupère les stocks en état d'alerte
-    function stock_alert(callback){
+    function stock_alert(){
         $.ajax({
             method: "GET",
             url: "http://localhost:8080/ExoJEEeCommerce/services?role=direction_stock_alert"
@@ -90,22 +90,18 @@ $(document).ready(function(){
 					}
                 }
             });
-            callback(true);
+            CAHT_mensuel();
         }) 
     }
 
-    // Récupère le CA HT par famille
-    var libellesFamilles=[];
-    var CaFamilles=[]
     function CAHT_mensuel(){
         $.ajax({
             method: "GET",
             url: "http://localhost:8080/ExoJEEeCommerce/services?role=direction_CAHT_mensuel"
-        }).done(function(listeProduits){
-            console.log(listeProduits)
-            for (var i=0; i<listeProduits.length; i++){
-                libellesFamilles[i]=listeProduits[i].libelleFamille;   
-                CaFamilles[i]=listeProduits[i].CAHT;   
+        }).done(function(CAFamillesRetour){
+            for (var i=0; i<CAFamillesRetour.length; i++){
+                libellesFamilles[i]=CAFamillesRetour[i].libelleFamille;   
+                CaFamilles[i]=CAFamillesRetour[i].CAHT;   
             } 
             var ctx = document.getElementById("CaMois");  
             var myChart = new Chart(ctx, {
@@ -113,7 +109,7 @@ $(document).ready(function(){
                 data: {
                     labels: libellesFamilles,
                     datasets: [{
-                        data: stockProduitsAlert,
+                        data: CaFamilles,
                         backgroundColor: [
                             couleurs.rouge,
                             couleurs.vert,
@@ -140,6 +136,38 @@ $(document).ready(function(){
                 	responsive: true
                 }
             });
+            CaHTAnnuel();
         }) 
+    }
+
+    function CaHTAnnuel(){
+        $.ajax({
+            method: "GET",
+            url:"http://localhost:8080/ExoJEEeCommerce/services?role=caht_annee_en_cours"
+        }).done(function(donnees){
+            console.log("donnees: ")
+            console.log(donnees)
+            for (var i=0; i<donnees.length; i++){
+                libellesMois[i]=donnees[i].Mois;   
+                CaHTMois[i]=donnees[i].CAHTMois;   
+            } 
+            var ctx = document.getElementById("CaHtAnnee");  
+            var myChart = new Chart(ctx, {
+                type: 'line', 
+                data: {
+                    labels: libellesMois,
+                    datasets: [{
+                        data: CaHTMois,
+                        fill: 'origin',
+                        backgroundColor: couleurs.bleu,
+                        borderColor: couleursBordures.bleu
+                    }]
+                }
+                ,
+                options: {
+                	responsive: true
+                }
+            });
+        })
     }
 }) 

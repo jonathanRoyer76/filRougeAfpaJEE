@@ -27,7 +27,6 @@
 		</div>
 		<script type="text/javascript">
 			function desactiveCompte(idClient){
-				console.log(idClient);
 				$.ajax({
 		            method: "GET",
 		            url: "/ExoJEEeCommerce/services?role=desactiveCompte&idClient="+idClient

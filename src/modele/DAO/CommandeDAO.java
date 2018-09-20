@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import modele.BDDException;
 import modele.CAHTMensuel;
+import modele.CaHtAnneeAvecPaniers;
 import modele.Client;
 import modele.Commande;
 import modele.Produit;
@@ -137,6 +138,31 @@ public class CommandeDAO extends DAO<Commande> {
 		}
 
 		return retour;
+	}
+
+	// Retourne le CA HT incluant les paniers pour l'année en cours
+	public ArrayList<CaHtAnneeAvecPaniers> getCAHTAnneeEnCoursAvecPaniers() {
+		ArrayList<CaHtAnneeAvecPaniers> listeRetour = new ArrayList<CaHtAnneeAvecPaniers>();
+
+		try {
+			Statement state = connexionBDD.createStatement();
+			ResultSet set = state.executeQuery("select * from vue_CAHTMois_avecPaniers");
+			while (set.next()) {
+				CaHtAnneeAvecPaniers temp = new CaHtAnneeAvecPaniers();
+				temp.setCAHTMois(set.getDouble("CAHTMois"));
+				temp.setDateDernierStatut(set.getString("dateDernierStatut"));
+				temp.setMois(set.getString("Mois"));
+				temp.setIdCommande(set.getInt("idCommande"));
+				temp.setTotalHTCommande(set.getDouble("totalHTCommande"));
+				listeRetour.add(temp);
+			}
+		} catch (SQLException e) {
+//			Services.afficheErreur("Erreur avec la base de données",
+//					"Impossible de récupérer le CA HT de l'année en cours");
+			e.printStackTrace();
+		}
+
+		return listeRetour;
 	}
 
 	// Renvoi la liste des produits contenus dans une commande

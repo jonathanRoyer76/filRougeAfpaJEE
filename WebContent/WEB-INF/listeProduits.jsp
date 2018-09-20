@@ -31,7 +31,7 @@
 				      	</c:if>
 				      	<c:if test="${ produit.libelleStatutProduit=='rupture' }">
 				      		<a href="" disabled class="btn btn-danger">Bientôt disponible</a>
-				      	</c:if>	      
+				      	</c:if>	       
 				    </div>
 				  </div>
 				</div>
@@ -40,11 +40,14 @@
 		
 		<script type="text/javascript">
 			function ajoutPanier(idProduit){
-				console.log($("#totalArticlesPanier").val());
 				$.ajax({
 		            method: "GET",
-		            url: "services?role=ajoutPanier&idProduit="+idProduit
-		        });
+		            url: "http://localhost:8080/ExoJEEeCommerce/services?role=ajoutPanier&idProduit="+idProduit
+		        }).done(function(){
+		        	setTimeout(function(){
+		                location.reload(); 
+		           }, 1000); 
+				});
 			}
 		</script>
     </body> 
