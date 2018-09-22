@@ -23,7 +23,7 @@
 		</c:otherwise>
 	</c:choose>        
     <div class="collapse" id="navbarTogglerDemo01">
-        <!-- <ul class="navbar-nav">  --> 
+        <ul class="navbar-nav">
         	<c:if test="${ !empty session_panier }">
         		<li class="nav-item">
 				<a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/monPanier">
@@ -52,6 +52,6 @@
 		            <a class="nav-link" href="http://localhost:8080/ExoJEEeCommerce/admin/direction">Dashboard direction</a>
 		        </li>
 			</c:if>			
-        <!-- </ul> -->  
+        </ul>  
     </div>
 </nav>
